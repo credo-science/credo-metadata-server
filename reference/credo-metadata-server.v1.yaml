@@ -31,20 +31,20 @@ paths:
         required: true
         description: Event ID
     get:
-      summary: Your GET endpoint
+      summary: Get event metadata
       responses:
         '200':
           description: OK
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Event-metadata'
               examples:
                 example-1:
                   value:
                     'core:user_id': 1234
                     'image:brightness': 5
                     'classification:type': muon
+              schema:
+                type: object
       operationId: get-v1-event_type-event_id
       description: Returns all metadata associated with event.
       parameters: []
@@ -53,7 +53,7 @@ paths:
       tags:
         - metadata
     put:
-      summary: ''
+      summary: Update event metadata
       operationId: put-v1-event_type-event_id
       responses:
         '200':
@@ -64,32 +64,17 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/Event-metadata'
             examples:
               example-1:
                 value:
                   'classification:type': muon
+            schema:
+              type: object
         description: 'Event metadata to be added to the object, existing fields of the same name will be overwritten.'
       tags:
         - metadata
 components:
-  schemas:
-    Event-metadata:
-      type: object
-      title: Event metadata
-      x-examples:
-        example-1:
-          'core:user_id': 1200
-          'core:team_id': 23
-          'image:brightness': 0.65
-      properties:
-        '{type}:{field}':
-          type:
-            - string
-            - number
-            - boolean
-      description: Detection/ping metadata
+  schemas: {}
   securitySchemes:
     API Key:
       type: apiKey
