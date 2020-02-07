@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: CREDO metadata server
+  version: '1.0'
+  description: |-
+    Dynamic metadata API server for CREDO project.
+
+    Stores and updates dynamic metadata associated with events (detections or pings).
+  contact:
+    name: Krzysztof Oziomek
+    email: k.oziomek@cyfronet.pl
+servers:
+  - url: 'https://api.credo.science/md-api'
+    description: Production
+paths:
+  '/v1/events/{event_type}/{event_id}':
+    parameters:
+      - schema:
+          type: string
+          enum:
+            - detections
+            - pings
+        name: event_type
+        in: path
+        required: true
+        description: Event type
+      - schema:
+          type: string
+        name: event_id
+        in: path
+        required: true
+        description: Event ID
+    get:
+      summary: Your GET endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event-metadata'
+              examples:
+                example-1:
+                  value:
+                    'core:user_id': 1234
+                    'image:brightness': 5
+                    'classification:type': muon
+      operationId: get-v1-event_type-event_id
+      description: Returns all metadata associated with event.
+      parameters: []
+      security:
+        - API Key: []
+      tags:
+        - metadata
+    put:
+      summary: ''
+      operationId: put-v1-event_type-event_id
+      responses:
+        '200':
+          description: OK
+      security:
+        - API Key: []
+      description: Add metadata field to event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event-metadata'
+            examples:
+              example-1:
+                value:
+                  'classification:type': muon
+        description: 'Event metadata to be added to the object, existing fields of the same name will be overwritten.'
+      tags:
+        - metadata
+components:
+  schemas:
+    Event-metadata:
+      type: object
+      title: Event metadata
+      x-examples:
+        example-1:
+          'core:user_id': 1200
+          'core:team_id': 23
+          'image:brightness': 0.65
+      properties:
+        '{type}:{field}':
+          type:
+            - string
+            - number
+            - boolean
+      description: Detection/ping metadata
+  securitySchemes:
+    API Key:
+      type: apiKey
+      in: header
+      description: ''
+      name: 'Authorization: Bearer {apiKey}'
+tags:
+  - name: metadata
+    description: Metadata operations
