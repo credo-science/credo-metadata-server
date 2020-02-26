@@ -40,11 +40,24 @@ paths:
               examples:
                 example-1:
                   value:
-                    'core:user_id': 1234
-                    'image:brightness': 5
+                    'core:user_id': '1234'
+                    'image:brightness': '5'
                     'classification:type': muon
               schema:
                 type: object
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                example-1:
+                  value:
+                    message: Event not found.
+        '500':
+          description: Internal Server Error
       operationId: get-v1-event_type-event_id
       description: Returns all metadata associated with event.
       parameters: []
@@ -58,6 +71,19 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                example-1:
+                  value:
+                    message: Metadata updated.
+        '400':
+          description: Invalid event type or metadata object. Check if all keys and values are strings.
+        '500':
+          description: Internal Server Error
       security:
         - API Key: []
       description: Add metadata field to event
@@ -68,9 +94,13 @@ paths:
               example-1:
                 value:
                   'classification:type': muon
+              example-2:
+                value:
+                  'points:awarded': '23'
+                  'points:combo_multiplier': '0.7'
             schema:
               type: object
-        description: 'Event metadata to be added to the object, existing fields of the same name will be overwritten.'
+        description: 'Event metadata to be added to the object, existing fields of the same name will be overwritten. All keys and values must be strings. Please prefix all keys with category (example: `core:team_id`).'
       tags:
         - metadata
 components:
